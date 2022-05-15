@@ -1,2 +1,4 @@
 /target
 /static
+.gitignore
+Cargo.lock
