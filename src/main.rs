@@ -19,14 +19,14 @@ fn with_pointer(pointer: *mut u128) {
     }
 }
 
-/*fn with_link(mut link: &u128) {
+fn with_link(link: &mut u128) {
     loop {
-        if link == &500000000 {
+        if *link == 500000000 {
             break;
         }
-        link = link + 1;
+        *link = *link + 1;
     }
-}*/
+}
 
 fn without_pointer() -> u128 {
     let mut num: u128 = 1;
@@ -64,16 +64,15 @@ async fn count_with_pointer() -> impl Responder {
     }
 }
 
-/*#[get("/count-with-link")]
+#[get("/count-with-link")]
 async fn count_with_link() -> impl Responder {
     let mut num: u128 = 1;
-    let link: &u128 = &num;
     let start: DateTime<Utc> = Utc::now();
-    with_link(link);
+    with_link(&mut num);
     let end: DateTime<Utc> = Utc::now();
 
     HttpResponse::Ok().body(format!("{}\nTime: {}", num, end - start))
-}*/
+}
 
 #[get("/count")]
 async fn count() -> impl Responder {
@@ -93,6 +92,6 @@ async fn main() -> std::io::Result<()> {
             .service(homepage)
             .service(count)
             .service(count_with_pointer)
-            //.service(count_with_link)
+            .service(count_with_link)
     }).bind(("127.0.0.1", 8000))?.run().await
 }
